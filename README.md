@@ -25,3 +25,24 @@ cmake --build build -j
 ctest --test-dir build --output-on-failure
 ./build/lob_sim data/sample_orders.csv
 ./build/benchmark_matching
+
+## Performance
+
+Benchmarked locally on Apple Silicon using a CMake Release build.
+
+| Metric | Result |
+|---|---:|
+| Messages processed | 1,000,000 |
+| Trades executed | 777,134 |
+| Executed volume | 19,823,303 |
+| Successful cancels | 12,637 |
+| Active resting orders after replay | 101,976 |
+| Elapsed time | 0.170 seconds |
+| Matching throughput | **5.88 million messages/sec** |
+
+The benchmark uses deterministic synthetic mixed order flow and measures matching-engine performance. Results are intended for implementation comparison and are not a claim of production-exchange latency.
+
+## Testing
+
+```bash
+ctest --test-dir build --output-on-failure
