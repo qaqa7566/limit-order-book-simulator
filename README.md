@@ -1,34 +1,27 @@
 # Limit Order Book Simulator
 
-A C++17 limit order book and exchange simulator implementing deterministic
+C++17 limit order book and exchange simulator implementing deterministic
 price-time priority matching for limit, market, and cancel orders.
 
-## Features
-- Price-time priority matching
-- Limit, market, and cancel order messages
-- Partial fills and multi-level sweeping
-- FIFO queues within each price level
-- O(1) cancellation lookup by order ID
-- Multi-symbol books
-- CSV order-flow replay
-- Trade output and final book-state reporting
+## Highlights
+- Price-time priority and FIFO execution within each price level
+- Limit, market, cancel, partial-fill, and multi-level sweep handling
+- Multi-symbol order books
+- O(1) order lookup/cancellation by order ID
+- CSV order-flow replay and executed-trade output
 - GoogleTest unit tests
-- Benchmark executable and Python analysis tools
+- Python tools for throughput and market-microstructure analysis
 
 ## Architecture
-- `OrderBook`: stores bids/asks and resting orders
-- `MatchingEngine`: validates, routes, matches, and records trades
-- `lob_sim`: replays CSV order flow through the engine
-- `benchmark_matching`: measures message throughput
+- `OrderBook`: maintains bid/ask price levels and resting orders
+- `MatchingEngine`: validates messages, matches orders, and emits trades
+- `lob_sim`: replays CSV order flow through the matching engine
+- `benchmark_matching`: measures matching throughput
 
-## Data Structures and Complexity
-- Bids: `std::map<Price, PriceLevel, std::greater<>>`
-- Asks: `std::map<Price, PriceLevel, std::less<>>`
-- Price level: `std::list<Order>` for FIFO ordering
-- Cancel index: hash map from order ID to list iterator
-
-Cancellation is O(1). Accessing the best bid/ask is O(1). Adding a new
-price level is O(log P), where P is the number of active price levels.
-
-## Build
-...
+## Build and Run
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j
+ctest --test-dir build --output-on-failure
+./build/lob_sim data/sample_orders.csv
+./build/benchmark_matching
